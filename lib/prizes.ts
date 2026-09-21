@@ -81,18 +81,29 @@ export interface PublicPrize {
   id: string;
   label: string;
   color: string;
+  textColor: string;
 }
 
 /**
  * Vue publique des lots, envoyee au navigateur pour dessiner la roue.
  * Volontairement sans le "weight" : le client ne doit jamais pouvoir deduire
  * ou influencer les probabilites de tirage, qui restent calculees cote serveur.
+ *
+ * Alternance encre/champagne (façon roulette) pour la DA premium minimaliste ;
+ * un prize.color personnalise dans la config reste prioritaire si defini.
  */
 export function getPublicPrizes(prizes: PrizeConfig[] = siteConfig.prizes): PublicPrize[] {
-  const palette = [siteConfig.theme.amber, siteConfig.theme.coral];
-  return prizes.map((prize, index) => ({
-    id: prize.id,
-    label: prize.label,
-    color: prize.color ?? palette[index % palette.length],
-  }));
+  const palette = [
+    { bg: siteConfig.theme.ink, text: siteConfig.theme.bone },
+    { bg: siteConfig.theme.champagne, text: siteConfig.theme.ink },
+  ];
+  return prizes.map((prize, index) => {
+    const fallback = palette[index % palette.length];
+    return {
+      id: prize.id,
+      label: prize.label,
+      color: prize.color ?? fallback.bg,
+      textColor: prize.color ? siteConfig.theme.bone : fallback.text,
+    };
+  });
 }

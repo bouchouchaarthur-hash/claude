@@ -45,14 +45,18 @@ export const siteConfig = {
     googleReviewUrl: process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL || "",
   },
 
+  // Palette "premium minimaliste" inspiree d'une roulette de bar a cocktails :
+  // fond clair epure, encre profonde, un seul accent chaud (terracotta) et
+  // un filet metallique (laiton) pour les liseres. Volontairement sobre.
   theme: {
-    cream: "#FBF3E6",
-    creamDark: "#F3E6CF",
-    amber: "#E6A23C",
-    amberDark: "#C9822A",
-    coral: "#F2604A",
-    coralDark: "#D6472F",
-    ink: "#2B2320",
+    bone: "#F6F1E9", // fond de page
+    paper: "#FFFFFF", // fond des cartes / modales
+    champagne: "#EAE0CB", // segments clairs de la roue
+    ink: "#1E1B18", // texte principal + segments sombres de la roue
+    inkSoft: "rgba(30, 27, 24, 0.6)",
+    terracotta: "#B5502E", // accent unique (CTA, lot gagne, focus)
+    brass: "#A9843F", // filet metallique (liseres, pointeur, cadre)
+    hairline: "rgba(30, 27, 24, 0.12)",
   },
 
   legal: {

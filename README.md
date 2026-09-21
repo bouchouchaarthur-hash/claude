@@ -14,8 +14,10 @@ fortune par une vraie petite app avec backend :
 - Configuration (nom du commerce, couleurs, lots et probabilités) centralisée
   dans un seul fichier pour pouvoir réutiliser l'app pour plusieurs clients.
 
-Design conservé : palette crème / ambre / corail, polices **Fraunces**
-(titres) + **Inter** (texte), roue animée en `<canvas>`.
+Direction artistique "premium minimaliste" façon roulette de bar à cocktails :
+fond ivoire, encre profonde, un seul accent chaud (terracotta) et un filet
+laiton, polices **Fraunces** (titres) + **Inter** (texte), roue animée en
+`<canvas>` à segments alternés encre/champagne.
 
 ## ⚠️ Contrainte légale — à ne jamais contourner
 
@@ -100,7 +102,7 @@ Tout se passe dans **`config/site.config.ts`** :
 
 - `business` : nom, logo, mention affichée avec le lot ("à présenter en
   caisse").
-- `theme` : couleurs crème / ambre / corail (hex).
+- `theme` : palette (bone, paper, champagne, ink, terracotta, brass — hex).
 - `legal.consentLabel` : texte de la case de consentement RGPD.
 - `prizes` : tableau de lots, chacun avec :
   - `id` (stable, ne pas changer une fois en prod — utilisé en base),
@@ -108,7 +110,7 @@ Tout se passe dans **`config/site.config.ts`** :
   - `weight` (poids relatif de tirage — pas besoin de faire 100 au total),
   - `type` (`discount` | `social` | `newsletter` | `product`),
   - `description` (optionnel, repris dans l'e-mail),
-  - `color` (optionnel, sinon alterne ambre/corail).
+  - `color` (optionnel, sinon alterne encre/champagne façon roulette).
 
 Le tirage du lot est **entièrement calculé côté serveur** (`app/api/spin`) :
 le navigateur ne fait qu'animer la roue jusqu'au lot renvoyé par l'API. Un

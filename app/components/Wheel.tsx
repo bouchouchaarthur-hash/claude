@@ -21,14 +21,22 @@ interface SpinResult {
   emailSent: boolean;
 }
 
-const CANVAS_SIZE = 280;
+const CANVAS_SIZE = 260;
 const SPIN_DURATION_MS = 4200;
 const EXTRA_SPINS = 5;
-const LABEL_MAX_WIDTH = 92;
+const LABEL_MAX_WIDTH = 80;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function easeOutCubic(t: number) {
   return 1 - Math.pow(1 - t, 3);
+}
+
+function SparkleIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" className="sparkle-icon" aria-hidden="true">
+      <path d="M12 2L13.8 9.2L21 11L13.8 12.8L12 20L10.2 12.8L3 11L10.2 9.2L12 2Z" fill="currentColor" />
+    </svg>
+  );
 }
 
 export default function Wheel({ prizes, consentLabel, redeemInstructions, googleReviewUrl }: WheelProps) {
@@ -70,8 +78,8 @@ export default function Wheel({ prizes, consentLabel, redeemInstructions, google
       ctx.closePath();
       ctx.fillStyle = prize.color;
       ctx.fill();
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#A9843F";
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       const midAngle = startAngle + segmentAngle / 2;
@@ -84,8 +92,8 @@ export default function Wheel({ prizes, consentLabel, redeemInstructions, google
       ctx.rotate(midAngle + (flip ? Math.PI : 0));
       ctx.textAlign = flip ? "left" : "right";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "600 12px Arial, sans-serif";
+      ctx.fillStyle = prize.textColor;
+      ctx.font = "500 11px Arial, sans-serif";
       drawWrappedText(ctx, prize.label, flip ? -(radius - 16) : radius - 16, LABEL_MAX_WIDTH);
       ctx.restore();
     });
@@ -93,11 +101,11 @@ export default function Wheel({ prizes, consentLabel, redeemInstructions, google
     ctx.restore();
 
     ctx.beginPath();
-    ctx.arc(radius, radius, 22, 0, 2 * Math.PI);
-    ctx.fillStyle = "#ffffff";
+    ctx.arc(radius, radius, 18, 0, 2 * Math.PI);
+    ctx.fillStyle = "#FFFFFF";
     ctx.fill();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "#E6A23C";
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = "#A9843F";
     ctx.stroke();
   }
 
@@ -231,8 +239,10 @@ export default function Wheel({ prizes, consentLabel, redeemInstructions, google
       {result && (
         <div className="overlay" role="dialog" aria-modal="true">
           <div className="result-card">
-            <div className="result-emoji">🎉</div>
-            <p className="result-title">Felicitations, vous avez gagne :</p>
+            <div className="result-emoji">
+              <SparkleIcon />
+            </div>
+            <p className="result-title">Felicitations, vous avez gagne</p>
             <p className="result-prize">{result.prizeLabel}</p>
             <div className="result-code-box">
               <p className="result-code-label">Votre code</p>
@@ -260,8 +270,10 @@ export default function Wheel({ prizes, consentLabel, redeemInstructions, google
       {showReviewPrompt && googleReviewUrl && (
         <div className="overlay" role="dialog" aria-modal="true">
           <div className="result-card">
-            <div className="result-emoji">🙏</div>
-            <p className="result-title">Merci d&apos;avoir joue !</p>
+            <div className="result-emoji">
+              <SparkleIcon />
+            </div>
+            <p className="result-title">Merci d&apos;avoir joue</p>
             <p className="result-note">
               Votre lot est deja valide et vous a ete envoye par e-mail. Si vous avez apprecie votre
               visite, un avis Google nous aiderait beaucoup — c&apos;est entierement facultatif et

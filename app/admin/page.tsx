@@ -50,8 +50,12 @@ export default async function AdminPage() {
                 <td>{entry.email}</td>
                 <td>{entry.prizeLabel}</td>
                 <td className="admin-code">{entry.code}</td>
-                <td>{entry.emailSent ? "✅" : "❌"}</td>
-                <td>{entry.redeemed ? "✅" : "—"}</td>
+                <td className={entry.emailSent ? "admin-status-ok" : "admin-status-off"}>
+                  {entry.emailSent ? "Oui" : "Non"}
+                </td>
+                <td className={entry.redeemed ? "admin-status-ok" : "admin-status-off"}>
+                  {entry.redeemed ? "Oui" : "—"}
+                </td>
               </tr>
             ))}
             {entries.length === 0 && (

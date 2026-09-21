@@ -10,30 +10,30 @@ interface SendPrizeEmailParams {
 
 function buildHtmlTemplate({ to: _to, prizeLabel, prizeDescription, code }: SendPrizeEmailParams) {
   const { name, logoUrl, redeemInstructions } = siteConfig.business;
-  const { cream, amber, coral, ink } = siteConfig.theme;
+  const { bone, champagne, ink, terracotta, brass } = siteConfig.theme;
 
   const logoBlock = logoUrl
-    ? `<img src="${logoUrl}" alt="${escapeHtml(name)}" style="max-height:56px;margin-bottom:16px;" />`
-    : `<div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;color:${ink};margin-bottom:16px;">${escapeHtml(
+    ? `<img src="${logoUrl}" alt="${escapeHtml(name)}" style="max-height:44px;margin-bottom:14px;filter:brightness(0) invert(1);" />`
+    : `<div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:600;color:${bone};margin-bottom:10px;">${escapeHtml(
         name
       )}</div>`;
 
   return `
-  <div style="background-color:${cream};padding:32px 16px;font-family:Helvetica,Arial,sans-serif;">
-    <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid ${amber}33;">
-      <div style="background:linear-gradient(135deg, ${amber}, ${coral});padding:24px;text-align:center;">
+  <div style="background-color:${bone};padding:40px 16px;font-family:Helvetica,Arial,sans-serif;">
+    <div style="max-width:440px;margin:0 auto;background:#ffffff;border:1px solid ${ink}1a;">
+      <div style="background:${ink};padding:32px 24px;text-align:center;">
         ${logoBlock}
-        <p style="color:#ffffff;font-size:14px;margin:0;letter-spacing:0.04em;text-transform:uppercase;">Roue de la fortune</p>
+        <p style="color:${brass};font-size:11px;margin:0;letter-spacing:0.16em;text-transform:uppercase;">Roue de la fortune</p>
       </div>
-      <div style="padding:32px 24px;text-align:center;">
-        <p style="color:${ink};font-size:16px;margin:0 0 8px;">Felicitations, vous avez gagne :</p>
-        <p style="color:${coral};font-size:22px;font-weight:700;margin:0 0 16px;">${escapeHtml(prizeLabel)}</p>
-        ${prizeDescription ? `<p style="color:${ink};font-size:14px;margin:0 0 24px;">${escapeHtml(prizeDescription)}</p>` : ""}
-        <div style="background:${cream};border:2px dashed ${amber};border-radius:12px;padding:16px;margin:0 0 24px;">
-          <p style="color:${ink}99;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 4px;">Votre code</p>
-          <p style="color:${ink};font-size:28px;font-weight:700;letter-spacing:0.08em;margin:0;font-family:monospace;">${escapeHtml(code)}</p>
+      <div style="padding:36px 28px;text-align:center;">
+        <p style="color:${ink}99;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;margin:0 0 10px;">Felicitations, vous avez gagne</p>
+        <p style="color:${terracotta};font-size:24px;font-style:italic;font-family:Georgia,'Times New Roman',serif;margin:0 0 18px;">${escapeHtml(prizeLabel)}</p>
+        ${prizeDescription ? `<p style="color:${ink};font-size:14px;line-height:1.5;margin:0 0 24px;">${escapeHtml(prizeDescription)}</p>` : ""}
+        <div style="background:${champagne};border:1px dashed ${brass};padding:18px;margin:0 0 24px;">
+          <p style="color:${ink}99;font-size:11px;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 6px;">Votre code</p>
+          <p style="color:${ink};font-size:26px;font-weight:600;letter-spacing:0.1em;margin:0;font-family:monospace;">${escapeHtml(code)}</p>
         </div>
-        <p style="color:${ink};font-size:14px;margin:0;">${escapeHtml(redeemInstructions)}</p>
+        <p style="color:${ink}cc;font-size:13px;line-height:1.5;margin:0;">${escapeHtml(redeemInstructions)}</p>
       </div>
     </div>
   </div>`;
