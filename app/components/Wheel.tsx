@@ -7,6 +7,12 @@ interface WheelProps {
   prizes: PublicPrize[];
   consentLabel: string;
   redeemInstructions: string;
+  /**
+   * Lien vers la fiche d'avis Google, propose UNIQUEMENT apres coup (une fois
+   * le lot deja attribue et envoye), sans aucune condition. Si vide, l'ecran
+   * n'est pas affiche. Ne jamais relier ce lien a l'obtention du lot.
+   */
+  googleReviewUrl?: string;
 }
 
 interface SpinResult {
@@ -19,12 +25,13 @@ const CANVAS_SIZE = 280;
 const SPIN_DURATION_MS = 4200;
 const EXTRA_SPINS = 5;
 const LABEL_MAX_WIDTH = 92;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function easeOutCubic(t: number) {
   return 1 - Math.pow(1 - t, 3);
 }
 
-export default function Wheel({ prizes, consentLabel, redeemInstructions }: WheelProps) {
+export default function Wheel({ prizes, consentLabel, redeemInstructions, googleReviewUrl }: WheelProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rotationRef = useRef(0);
   const animationRef = useRef<number | null>(null);
@@ -34,8 +41,11 @@ export default function Wheel({ prizes, consentLabel, redeemInstructions }: Whee
   const [isSpinning, setIsSpinning] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [result, setResult] = useState<SpinResult | null>(null);
+  const [showReviewPrompt, setShowReviewPrompt] = useState(false);
 
   const segmentAngle = (2 * Math.PI) / prizes.length;
+  const isEmailValid = EMAIL_REGEX.test(email.trim());
+  const canSubmit = isEmailValid && consent && !isSpinning && !result;
 
   function drawWheel(rotation: number) {
     const canvas = canvasRef.current;
@@ -138,6 +148,11 @@ export default function Wheel({ prizes, consentLabel, redeemInstructions }: Whee
     e.preventDefault();
     setErrorMessage(null);
 
+    if (!isEmailValid) {
+      setErrorMessage("Merci de renseigner une adresse e-mail valide pour tourner la roue.");
+      return;
+    }
+
     if (!consent) {
       setErrorMessage("Merci de cocher la case de consentement pour continuer.");
       return;
@@ -208,7 +223,7 @@ export default function Wheel({ prizes, consentLabel, redeemInstructions }: Whee
 
         {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-        <button type="submit" className="spin-button" disabled={isSpinning || Boolean(result)}>
+        <button type="submit" className="spin-button" disabled={!canSubmit}>
           {isSpinning ? "La roue tourne..." : "Tourner la roue"}
         </button>
       </form>
@@ -229,9 +244,43 @@ export default function Wheel({ prizes, consentLabel, redeemInstructions }: Whee
                 ? "Un e-mail recapitulatif vient de vous etre envoye."
                 : "Notez bien ce code : l'envoi de l'e-mail a rencontre un probleme."}
             </p>
-            <button className="close-button" onClick={() => setResult(null)}>
+            <button
+              className="close-button"
+              onClick={() => {
+                setResult(null);
+                if (googleReviewUrl) setShowReviewPrompt(true);
+              }}
+            >
               Fermer
             </button>
+          </div>
+        </div>
+      )}
+
+      {showReviewPrompt && googleReviewUrl && (
+        <div className="overlay" role="dialog" aria-modal="true">
+          <div className="result-card">
+            <div className="result-emoji">🙏</div>
+            <p className="result-title">Merci d&apos;avoir joue !</p>
+            <p className="result-note">
+              Votre lot est deja valide et vous a ete envoye par e-mail. Si vous avez apprecie votre
+              visite, un avis Google nous aiderait beaucoup — c&apos;est entierement facultatif et
+              n&apos;a aucune incidence sur votre lot.
+            </p>
+            <div className="review-actions">
+              <a
+                href={googleReviewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="spin-button review-link"
+                onClick={() => setShowReviewPrompt(false)}
+              >
+                Laisser un avis Google
+              </a>
+              <button className="review-skip-button" onClick={() => setShowReviewPrompt(false)}>
+                Plus tard
+              </button>
+            </div>
           </div>
         </div>
       )}

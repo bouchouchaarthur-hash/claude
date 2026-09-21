@@ -87,6 +87,7 @@ Toutes les clés sensibles vivent dans `.env` (jamais commité, voir
 | `ADMIN_SESSION_SECRET` | Chaîne aléatoire longue pour signer le cookie de session admin |
 | `NEXT_PUBLIC_BUSINESS_NAME` | Nom du commerce affiché sur la page |
 | `NEXT_PUBLIC_LOGO_URL` | URL d'un logo (optionnel, sinon le nom est affiché en titre) |
+| `NEXT_PUBLIC_GOOGLE_REVIEW_URL` | Lien vers votre fiche d'avis Google (optionnel). Voir section "Demande d'avis" ci-dessous. |
 
 > Vous voulez utiliser Brevo plutôt que Resend ? Le point d'entrée unique est
 > `lib/email.ts` (fonction `sendPrizeEmail`) : remplacez l'appel au SDK Resend
@@ -125,6 +126,28 @@ serveur.
 - IP et user-agent sont journalisés par participation (colonnes
   `ipAddress` / `userAgent`) à titre d'audit, sans bloquer sur ce critère par
   défaut.
+- L'e-mail est **obligatoire** pour jouer : champ HTML `required`, bouton
+  "Tourner la roue" désactivé tant que l'adresse n'est pas valide et la case
+  de consentement cochée (`app/components/Wheel.tsx`), et re-validé côté
+  serveur (`app/api/spin/route.ts`) avant tout tirage.
+
+## Demande d'avis Google (après coup, jamais une condition)
+
+Si `NEXT_PUBLIC_GOOGLE_REVIEW_URL` est renseigné, un écran "Merci d'avoir
+joué !" apparaît **après** que le client a fermé l'écran de son lot déjà
+attribué et déjà envoyé par e-mail, avec un bouton "Laisser un avis Google" et
+un bouton "Plus tard". Cet écran :
+
+- n'apparaît qu'une fois le lot déjà acquis (il ne peut donc pas être une
+  condition pour l'obtenir) ;
+- est entièrement facultatif et fermable sans conséquence ;
+- ne modifie ni le lot, ni le code, ni son envoi par e-mail.
+
+**Ne modifiez jamais ce flux pour rendre un lot ou le tour de roue conditionné
+au dépôt d'un avis.** C'est interdit par l'article L111-7-2 du Code de la
+consommation et par la politique de Google, et le serveur refuse de toute
+façon de démarrer si un lot du fichier de config est lié à un avis (voir
+garde-fou dans `lib/prizes.ts`).
 
 ## Dashboard admin
 

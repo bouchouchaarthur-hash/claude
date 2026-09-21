@@ -33,6 +33,16 @@ export const siteConfig = {
     logoUrl: process.env.NEXT_PUBLIC_LOGO_URL || "",
     // Mention affichee sous le lot gagne ("a presenter en caisse", etc.)
     redeemInstructions: "A presenter en caisse lors de votre prochaine visite.",
+    // Lien vers la fiche d'avis Google (facultatif). Si vide, l'ecran de
+    // demande d'avis n'est pas affiche.
+    //
+    // IMPORTANT : ce lien est propose APRES coup, une fois le lot deja
+    // attribue et envoye par e-mail, sans aucune contrepartie ni condition.
+    // Ne JAMAIS conditionner le tour de roue, un lot ou son obtention au
+    // depot d'un avis : c'est interdit par l'article L111-7-2 du Code de la
+    // consommation et par la politique de Google (voir garde-fou dans
+    // lib/prizes.ts, qui empeche deja tout lot de ce type).
+    googleReviewUrl: process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL || "",
   },
 
   theme: {

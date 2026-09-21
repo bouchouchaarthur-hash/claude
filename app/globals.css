@@ -259,6 +259,28 @@ form.spin-form {
   margin: -8px 0 20px;
 }
 
+.review-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.review-skip-button {
+  border: none;
+  background: transparent;
+  color: rgba(43, 35, 32, 0.55);
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+  padding: 6px;
+  text-decoration: underline;
+}
+
 .close-button {
   border: none;
   background: var(--color-ink);

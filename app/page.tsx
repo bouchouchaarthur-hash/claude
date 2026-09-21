@@ -15,7 +15,12 @@ export default function HomePage() {
           <h1 className="business-name">{siteConfig.business.name}</h1>
         )}
         <p className="tagline">Tournez la roue, tentez votre chance !</p>
-        <Wheel prizes={prizes} consentLabel={siteConfig.legal.consentLabel} redeemInstructions={siteConfig.business.redeemInstructions} />
+        <Wheel
+          prizes={prizes}
+          consentLabel={siteConfig.legal.consentLabel}
+          redeemInstructions={siteConfig.business.redeemInstructions}
+          googleReviewUrl={siteConfig.business.googleReviewUrl}
+        />
       </div>
     </main>
   );
