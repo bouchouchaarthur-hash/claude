@@ -64,13 +64,19 @@ export default function Wheel({ prizes, consentLabel, redeemInstructions }: Whee
       ctx.lineWidth = 2;
       ctx.stroke();
 
+      const midAngle = startAngle + segmentAngle / 2;
+      const normalizedAngle = ((midAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      // Dans la moitie gauche du cadran, le texte serait affiche a l'envers :
+      // on retourne son orientation de 180deg pour qu'il reste lisible.
+      const flip = normalizedAngle > Math.PI / 2 && normalizedAngle < (3 * Math.PI) / 2;
+
       ctx.save();
-      ctx.rotate(startAngle + segmentAngle / 2);
-      ctx.textAlign = "right";
+      ctx.rotate(midAngle + (flip ? Math.PI : 0));
+      ctx.textAlign = flip ? "left" : "right";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#ffffff";
       ctx.font = "600 12px Arial, sans-serif";
-      drawWrappedText(ctx, prize.label, radius - 16, LABEL_MAX_WIDTH);
+      drawWrappedText(ctx, prize.label, flip ? -(radius - 16) : radius - 16, LABEL_MAX_WIDTH);
       ctx.restore();
     });
 
