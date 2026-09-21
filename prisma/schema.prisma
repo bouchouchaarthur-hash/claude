@@ -1,0 +1,28 @@
+// Schema Prisma - roue de la fortune
+//
+// Provider par defaut : SQLite (fichier local), suffisant pour demarrer.
+// Pour un deploiement serverless (Vercel), le systeme de fichiers est
+// ephemere : changez le provider en "postgresql" et pointez DATABASE_URL
+// vers une base managee (Neon, Vercel Postgres, Supabase...). Voir README.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Entry {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  prizeId    String
+  prizeLabel String
+  code       String   @unique
+  redeemed   Boolean  @default(false)
+  emailSent  Boolean  @default(false)
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+}
