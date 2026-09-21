@@ -89,21 +89,44 @@ export interface PublicPrize {
  * Volontairement sans le "weight" : le client ne doit jamais pouvoir deduire
  * ou influencer les probabilites de tirage, qui restent calculees cote serveur.
  *
- * Alternance encre/champagne (façon roulette) pour la DA premium minimaliste ;
- * un prize.color personnalise dans la config reste prioritaire si defini.
+ * Couleurs encre/champagne/terracotta (façon roulette) pour la DA premium
+ * minimaliste ; un prize.color personnalise dans la config reste prioritaire
+ * si defini. Sur un cercle, alterner seulement 2 couleurs echoue des que le
+ * nombre de lots est impair (le dernier segment retombe sur la couleur du
+ * premier) : on utilise donc 3 tons et on choisit, a chaque segment, une
+ * couleur differente de son voisin precedent ET, pour le dernier segment, du
+ * premier — garantissant qu'aucun segment adjacent ne partage sa couleur,
+ * y compris a la jointure de la roue, quel que soit le nombre de lots.
  */
 export function getPublicPrizes(prizes: PrizeConfig[] = siteConfig.prizes): PublicPrize[] {
   const palette = [
     { bg: siteConfig.theme.ink, text: siteConfig.theme.bone },
     { bg: siteConfig.theme.champagne, text: siteConfig.theme.ink },
+    { bg: siteConfig.theme.terracotta, text: siteConfig.theme.bone },
   ];
-  return prizes.map((prize, index) => {
-    const fallback = palette[index % palette.length];
-    return {
-      id: prize.id,
-      label: prize.label,
-      color: prize.color ?? fallback.bg,
-      textColor: prize.color ? siteConfig.theme.bone : fallback.text,
-    };
+  const total = prizes.length;
+  const resolved: { bg: string; text: string }[] = [];
+
+  prizes.forEach((prize, index) => {
+    if (prize.color) {
+      resolved.push({ bg: prize.color, text: siteConfig.theme.bone });
+      return;
+    }
+
+    const isLast = index === total - 1;
+    const prevBg = resolved[index - 1]?.bg;
+    const firstBg = resolved[0]?.bg;
+    const rotated = [...palette.slice(index % palette.length), ...palette.slice(0, index % palette.length)];
+    const pick =
+      rotated.find((c) => (!prevBg || c.bg !== prevBg) && (!isLast || !firstBg || c.bg !== firstBg)) ??
+      palette[index % palette.length];
+    resolved.push(pick);
   });
+
+  return prizes.map((prize, index) => ({
+    id: prize.id,
+    label: prize.label,
+    color: resolved[index].bg,
+    textColor: resolved[index].text,
+  }));
 }
